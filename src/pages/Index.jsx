@@ -1,5 +1,6 @@
-import { Box, Container, Flex, Heading, Text, VStack, Image, SimpleGrid, Link, HStack } from "@chakra-ui/react";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { useState } from "react";
+import { Box, Container, Flex, Heading, Text, VStack, Image, SimpleGrid, Link, HStack, Input, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
+import { FaFacebook, FaTwitter, FaInstagram, FaSearch } from "react-icons/fa";
 
 const products = [
   {
@@ -33,6 +34,17 @@ const products = [
 ];
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    // Logic to handle search
+    console.log("Searching for:", searchQuery);
+  };
+
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Container maxW="container.xl" p={0}>
       <Flex as="nav" bg="blue.800" color="white" p={4} justifyContent="space-between" alignItems="center">
@@ -42,13 +54,27 @@ const Index = () => {
           <Link href="#">Products</Link>
           <Link href="#">About</Link>
           <Link href="#">Contact</Link>
+          <InputGroup maxW="300px">
+            <Input
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <InputRightElement>
+              <IconButton
+                aria-label="Search"
+                icon={<FaSearch />}
+                onClick={handleSearch}
+              />
+            </InputRightElement>
+          </InputGroup>
         </HStack>
       </Flex>
 
       <Box as="main" p={4}>
         <Heading as="h1" size="xl" mb={6} textAlign="center">Welcome to ElectroShop</Heading>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={10}>
-          {products.map(product => (
+          {filteredProducts.map(product => (
             <Box key={product.id} borderWidth="1px" borderRadius="lg" overflow="hidden">
               <Image src={product.image} alt={product.name} />
               <Box p={6}>
